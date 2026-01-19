@@ -1,0 +1,31 @@
+title: Windows Brute Force Logon Attempts
+id: 2d7b1c44-9c9b-4c8e-8f65-1c8a5f9a1001
+status: stable
+description: >
+  Detects multiple failed Windows authentication attempts from the same source
+  within a short time window, which may indicate brute force activity.
+author: Faith Muendi
+date: 2026/01/18
+references:
+  - https://attack.mitre.org/techniques/T1110/
+
+logsource:
+  product: windows
+  service: security
+
+detection:
+  failed_logon:
+    EventID: 4625
+  timeframe: 5m
+  condition: failed_logon | count() >= 5
+
+falsepositives:
+  - User mistyped password
+  - Misconfigured service accounts
+  - Password reset activity
+
+level: medium
+
+tags:
+  - attack.credential_access
+  - attack.t1110
