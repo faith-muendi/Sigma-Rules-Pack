@@ -1,0 +1,36 @@
+title: Suspicious PowerShell Execution
+id: 5a9f3d21-8b6f-4c77-a2d9-9a7c1f000002
+status: stable
+description: >
+  Detects PowerShell execution with common suspicious flags that are often
+  used by attackers to evade detection or execute encoded payloads.
+author: Faith Muendi
+date: 2026/01/18
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+
+logsource:
+  product: windows
+  service: security
+
+detection:
+  powershell_process:
+    EventID: 4688
+    NewProcessName|endswith: '\powershell.exe'
+    CommandLine|contains:
+      - '-enc'
+      - 'EncodedCommand'
+      - '-nop'
+      - '-w hidden'
+  condition: powershell_process
+
+falsepositives:
+  - Legitimate administrative scripts
+  - IT automation tools
+  - Security tooling
+
+level: high
+
+tags:
+  - attack.execution
+  - attack.t1059.001
