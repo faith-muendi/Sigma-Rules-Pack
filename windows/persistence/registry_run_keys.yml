@@ -1,0 +1,33 @@
+title: Windows Persistence via Registry Run Keys
+id: 9c1e4f7a-3d2b-4a6c-9f11-8c5a2f000003
+status: stable
+description: >
+  Detects modification of common Windows Registry Run keys which are often
+  abused by attackers to establish persistence.
+author: Faith Muendi
+date: 2026/01/18
+references:
+  - https://attack.mitre.org/techniques/T1547/001/
+
+logsource:
+  product: windows
+  service: security
+
+detection:
+  registry_modification:
+    EventID: 4657
+    ObjectName|contains:
+      - '\Software\Microsoft\Windows\CurrentVersion\Run'
+      - '\Software\Microsoft\Windows\CurrentVersion\RunOnce'
+  condition: registry_modification
+
+falsepositives:
+  - Legitimate software installation
+  - System startup configuration changes
+  - Authorized administrative activity
+
+level: high
+
+tags:
+  - attack.persistence
+  - attack.t1547.001
